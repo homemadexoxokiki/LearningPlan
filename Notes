@@ -152,4 +152,39 @@ python -c
 "content = '''内容'''; open('testcases\\use_mock_test.yaml', 'w', encoding='utf-8').write(content)"
 
 
+#批量创建文件
+①
 
+②
+
+python
+import os
+# 确保testcases目录存在
+os.makedirs("testcases", exist_ok=True)
+cases = {
+    "basic_get.yml": """
+   脚本1
+""",
+    
+   脚本2
+""",
+    
+   脚本3
+"""
+}
+
+for filename, content in cases.items():
+    with open(f"testcases/{filename}", "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"已创建: {filename}")
+
+print("Day 2 所有用例已生成！")
+
+for filename, content in cases.items():
+    filepath = os.path.join("testcases", filename)
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"✓ 已创建: {filepath}")
+
+print("\n✅ Day 2 所有用例已生成！")
+print("运行测试: hrun testcases/")

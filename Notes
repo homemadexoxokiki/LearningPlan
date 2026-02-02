@@ -1,0 +1,78 @@
+ 
+hrun -v
+v4.3.5
+ 
+Echo 命令
+•	> 会创建新文件或覆盖已有文件。
+•	>> 会向已有文件末尾追加内容。
+•	echo. 用于添加一个空行。
+•	行首的空格（缩进） 对YAML文件至关重要，必须保留。
+
+写一个新文件
+notepad testcases\demo_testcase.yml
+
+按 Ctrl+S 保存，关闭记事本。
+
+
+config:
+  name: "demo testcase"
+  base_url: "https://httpbin.org"
+
+teststeps:
+- name: get request
+  request:
+    method: GET
+    url: /get
+  validate:
+  - eq: [status_code, 200]
+  - eq: ["body.url", "https://httpbin.org/get"]
+或
+
+config:
+  name: "demo testcase"
+  base_url: "https://httpbin.org"
+
+teststeps:
+- name: get request
+  request:
+    method: GET
+    url: /get
+  validate:
+  - eq: [status_code, 200]
+  - eq: ["body.url", "https://httpbin.org/get"]
+
+hrun startproject test_project
+cd ai_resilience_test
+hrun testcases/demo_testcase.yml
+
+快速验证网络连通性
+# 方法1：用Python测试
+python -c "import urllib.request; print('网络正常' if urllib.request.urlopen('http://httpbin.org/get').status == 200 else '网络异常')"
+
+# 方法2：用curl（如果有安装）
+curl -I http://httpbin.org/get
+
+修改内容
+del testcases\demo_testcase.yml
+notepad testcases\demo_testcase.yml
+
+失败：E   check_value: 0(int)
+status_code: 0 意味着：DNS解析失败、网络完全不通、或防火墙阻止
+
+解决方法：
+查询我的代理服务器:端口 http://proxyhk.huawei.com:8080
+set http_proxy=http://http://proxyhk.huawei.com:8080
+set https_proxy=http://http://proxyhk.huawei.com:8080
+set no_proxy=localhost,127.0.0.1
+///DAY2
+https://httprunner.com/docs/
+
+# 清除所有代理设置
+set http_proxy=
+set https_proxy=
+set HTTP_PROXY=
+set HTTPS_PROXY=
+set no_proxy=
+
+#验证网路是否连通
+python -c "import socket; socket.gethostbyname('www.baidu.com')"

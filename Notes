@@ -76,3 +76,80 @@ set no_proxy=
 
 #验证网路是否连通
 python -c "import socket; socket.gethostbyname('www.baidu.com')"
+
+#创建测试用例（testcases/offline_test.yml）
+config:
+  name: "离线模拟测试"
+  variables:
+    mock_data: {"status": "success", "code": 200}
+
+teststeps:
+- name: "模拟API响应"
+  request:
+    method: GET
+    url: "about:blank"  # 特殊URL，不真正发起网络请求
+  extract:
+    response_code: 200
+    response_body: "$mock_data"
+  validate:
+  - eq: [status_code, 200]
+  - eq: ["$response_body.status", "success"]
+
+#建立本地文件-创建自定义函数（debugtalk.py）来模拟请求
+python -c "content = '''import time\n\ndef mock_request(url, method=\"GET\", **kwargs):\n    \"\"\"模拟HTTP请求，完全不依赖网络\"\"\"\n    print(f\"模拟请求: {method} {url}\")\n    \n    # 模拟响应\n    class MockResponse:\n        def __init__(self):\n            self.status_code = 200\n            self.headers = {\"Content-Type\": \"application/json\"}\n            self.text = '{\"status\": \"success\", \"code\": 200, \"url\": \"' + url + '\"}'\n            self.elapsed = type('Elapsed', (), {'total_seconds': lambda: 0.1})()\n    \n    return MockResponse()\n'''; open('debugtalk.py', 'w', encoding='utf-8').write(content); print('文件创建成功')"
+
+//
+import time
+
+def mock_request(url, method="GET", **kwargs):
+    """模拟HTTP请求，完全不依赖网络"""
+    print(f"模拟请求: {method} {url}")
+    
+    # 模拟响应
+    class MockResponse:
+        def __init__(self):
+            self.status_code = 200
+            self.headers = {"Content-Type": "application/json"}
+            self.text = '{"status": "success", "code": 200, "url": "' + url + '"}'
+            self.elapsed = type('Elapsed', (), {'total_seconds': lambda: 0.1})()
+    
+    return MockResponse()
+
+#验证文件是否正确
+type debugtalk.py
+显示文件内容
+
+#创建使用模拟函数的测试用例（testcases/mock_test.yml）
+python -c "import os;os.makedirs('testcase',exist_ok=True)
+//
+config:
+  name: "使用模拟函数的测试"
+  variables:
+    test_url: "https://api.example.com/test"
+
+teststeps:
+- name: "模拟API调用"
+  request:
+    method: GET
+    url: "$test_url"
+  setup_hook:
+    - ${mock_request($test_url, "GET")}
+  validate:
+  - eq: ["status_code", 200]
+  - eq: ["$mock_data.status", "success"]
+
+
+【两种CMD写Python的方式】
+①直接在 write() 函数里写入字符串内容（换行、双引号需要加转义）
+python -c "import os; 
+# 创建目录
+os.makedirs('testcases', exist_ok=True);
+#写入文件
+open('testcases\\use_mock_test.yaml', 'w', encoding='utf-8').write('内容')"
+② 先赋值再写入：先用变量存储内容，再写入文件
+python -c 
+# 定义内容
+"content = '''内容'''; open('testcases\\use_mock_test.yaml', 'w', encoding='utf-8').write(content)"
+
+
+

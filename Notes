@@ -188,3 +188,49 @@ for filename, content in cases.items():
 
 print("\n✅ Day 2 所有用例已生成！")
 print("运行测试: hrun testcases/")
+
+【Day1 Summary】
+1、YAML结构：config、teststeps、variables
+2、理解变量使用：全局变量、局部变量、变量引用
+3、掌握断言写法：eq、contains等验证器
+  
+2、变量
+config:
+  variables:
+    global_var: "全局变量"  # 全局变量，所有teststeps可用
+
+teststeps:
+  - name: "步骤1"
+    variables:
+      local_var: "局部变量"  # 局部变量，只在当前步骤可用
+    request:
+      url: "/get"
+      method: GET
+      params:
+        global: "$global_var"     # ✓ 可以访问
+        local: "$local_var"       # ✓ 可以访问
+        
+  - name: "步骤2"
+    request:
+      url: "/get"
+      method: GET
+      params:
+        global: "$global_var"     # ✓ 可以访问
+        local: "$local_var"       # ✗ 报错！局部变量不可访问
+
+提取变量	step.extract	后续steps	$变量名	从响应中提取，后续step可用
+参数化变量	config.parameters	参数化循环	$变量名	数据驱动测试时使用
+
+3、断言
+
+验证器	作用	示例
+eq	相等	eq: ["status_code", 200]
+contains	包含	contains: ["body.text", "success"]
+startswith	以...开头	startswith: ["body.url", "http"]
+endswith	以...结尾	endswith: ["body.filename", ".json"]
+length_eq	长度等于	length_eq: ["body.items", 3]
+type_match	类型匹配	type_match: ["body.id", "int"]
+regex_match	正则匹配	regex_match: ["body.email", ".*@.*\\.com"]
+
+注意：列表项用 - 开头（- name / - eq）
+

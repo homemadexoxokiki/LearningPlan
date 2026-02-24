@@ -233,11 +233,20 @@ type_match	类型匹配	type_match: ["body.id", "int"]
 regex_match	正则匹配	regex_match: ["body.email", ".*@.*\\.com"]
 
 注意：列表项用 - 开头（- name / - eq）
+【day 3】参数化-数据驱动
+一、多组测试数据
+二、CSV数据（从外部读取）
+三、参数化提取、使用
 
 【day 4】
 在接口自动化测试中，经常需要根据请求参数生成签名（例如将参数拼接后计算 MD5 作为校验值）
+#数据处理:计算输入字符串的 MD5 哈希值，并以十六进制字符串的形式返回
 def calculate_md5(text):
     return hashlib.md5(text.encode()).hexdigest()
 
 result = calculate_md5("hello")
 print(result)  # 输出: 5d41402abc4b2a76b9719d911017c592
+
+text.encode()：将字符串转换为字节类型（因为哈希函数需要字节输入）。
+hashlib.md5(...)：创建一个 MD5 哈希对象。
+.hexdigext()：返回计算出的 MD5 值的十六进制表示

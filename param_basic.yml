@@ -1,0 +1,25 @@
+config:
+  name:"基础参数化"
+  base_url:"http://www.httpbin.org"
+  parameters:
+    user-age:
+      - ["张三"，25]
+      - ["李四"，18]
+      - ["王五"，35]
+
+teststeps:
+  - name:"参数化用户测试"
+    parameters:
+      name: ["user","age"]
+    request:
+      methods: POST
+      url: /post
+      json:
+        name: $user
+        age: $age
+        timestamp: "2026-02-09"
+    validate:
+      - eq: [status_code, 200]
+      - eq: ["body.json.name","$user"]
+      - eq: ["body.json.age",$age]
+            

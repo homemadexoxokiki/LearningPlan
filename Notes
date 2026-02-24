@@ -234,3 +234,10 @@ regex_match	正则匹配	regex_match: ["body.email", ".*@.*\\.com"]
 
 注意：列表项用 - 开头（- name / - eq）
 
+【day 4】
+在接口自动化测试中，经常需要根据请求参数生成签名（例如将参数拼接后计算 MD5 作为校验值）
+def calculate_md5(text):
+    return hashlib.md5(text.encode()).hexdigest()
+
+result = calculate_md5("hello")
+print(result)  # 输出: 5d41402abc4b2a76b9719d911017c592

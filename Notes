@@ -238,12 +238,43 @@ regex_match	正则匹配	regex_match: ["body.email", ".*@.*\\.com"]
 二、CSV数据（从外部读取）
 三、参数化提取、使用
 
-【day 4】
+【day 4】内置hook函数
+一、基础概念
+debugtalk.py 自定义函数库:函数定义和导入
+hooks_basic.yaml 基础Hook使用：setup/teardown hook
+hooks_advanced.yml 高级hook使用:动态修改请求、验证响应
+hooks_with_params.yml hook与参数化结合：参数化场景下的hook
+二、常用场景
+请求前：生成签名、添加token、准备测试数据
+请求后：验证业务裸机、清理测试数据、记录日志
+三、debugtalk.py 使用规则
+放在项目根目录
+函数可以被所有用例阴阳
+修改后需要重启测试或使用热加载
+
+//hook的好处-debugtalk.py
+1.定义公共函数，代码复用
+2.请求前/后的处理
+3.测试数据准备与清理
+4.
+
+# 使用 hook：代码复用
+# debugtalk.py
+def add_common_params(request):
+    """添加公共参数"""
+# testcase.yml
+teststeps:
+  - name: "测试"
+    setup_hooks:
+      - "${add_common_params(request)}"  # 复用hook
+
+
 在接口自动化测试中，经常需要根据请求参数生成签名（例如将参数拼接后计算 MD5 作为校验值）
 #数据处理:计算输入字符串的 MD5 哈希值，并以十六进制字符串的形式返回
 def calculate_md5(text):
     return hashlib.md5(text.encode()).hexdigest()
 
+其他：
 result = calculate_md5("hello")
 print(result)  # 输出: 5d41402abc4b2a76b9719d911017c592
 

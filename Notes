@@ -234,7 +234,11 @@ regex_match	正则匹配	regex_match: ["body.email", ".*@.*\\.com"]
 
 注意：列表项用 - 开头（- name / - eq）
 【day 3】参数化-数据驱动
-一、多组测试数据
+一、创建基础参数化用例（param_basic.yml）
+config 输入参数
+teststep
+validate
+你的代码 → 网络传输 → 服务器接收 → 服务器处理 → 服务器返回 → 网络传输 → 你的代码接收
 二、CSV数据（从外部读取）
 三、参数化提取、使用
 

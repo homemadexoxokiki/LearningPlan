@@ -1,0 +1,5 @@
+username,password,expected_code
+test_user1,pass123,200
+test_user2,wrong_pass,400
+admin,admin123,200
+guest,,401

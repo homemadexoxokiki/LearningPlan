@@ -1,0 +1,19 @@
+config:
+  name: "csv数据驱动登录测试"
+  base_url: "http://www.httpbin.org"
+  parameters:
+    username-password-expected_code:
+      csv: data/users.csv
+
+teststeps:
+- name: "csv数据测试"
+  request:
+    method: POST
+    url: /post
+    json:
+      username: "$username"
+      password: "$password"
+      test_type: "login"
+  validate:
+  - eq: [status_code,$expected_code]
+  - eq: ["body.json.username","$username"]

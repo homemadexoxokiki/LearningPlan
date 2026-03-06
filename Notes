@@ -240,6 +240,14 @@ teststep
 validate
 你的代码 → 网络传输 → 服务器接收 → 服务器处理 → 服务器返回 → 网络传输 → 你的代码接收
 二、CSV数据（从外部读取）
+config:
+  name: "CSV数据驱动登录测试"
+  base_url: "http://www.httpbin.org"
+  parameters:
+    username-password-expected_code:
+      csv: data/users.csv  # 引用CSV文件
+
+
 三、参数化提取、使用
 
 【day 4】内置hook函数
@@ -258,6 +266,21 @@ hooks_with_params.yml hook与参数化结合：参数化场景下的hook
 
 //hook的好处-debugtalk.py
 1.定义公共函数，代码复用
+debugtalk.py：放在项目根目录（与testcases文件夹同级）。修改后需要重启测试或使用热加载，修改后需要重启测试或使用热加载
+注意：debugtalk是正常yml脚本格式，换行空格四格，与httprunner格式不同（空2格）
+目录结果如下：
+ai_resilience_test/           # 项目根目录
+├── debugtalk.py              # 自定义函数（放在根目录）
+├── testcases/                # 存放所有YAML用例
+│   ├── hooks_basic.yml
+│   ├── hooks_advanced.yml
+│   ├── hooks_with_params.yml
+│   └── ...（其他用例）
+├── data/                      # 测试数据（可选）
+├── reports/                   # 测试报告（自动生成）
+└── ...
+
+
 2.请求前/后的处理
 3.测试数据准备与清理
 4.
